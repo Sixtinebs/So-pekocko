@@ -2,13 +2,14 @@ const Sauce = require('../models/sauces');
 const multer = require('../middleware/mutler');
 
 exports.createSauce = (req, res, next) => {
-    console.log(req)
-    const sauceObject = JSON.parse(req.body.sauce);
+    console.log(req.body);
+    const sauceObject = JSON.parse(JSON.stringify(req.body.sauce));
     delete sauceObject._id;
     const sauce = new Sauce({
         ...sauceObject,
         imageURL: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
+    
     sauce.save()
         .then(() => res.status(201).json({ message: "La sauce a bien été créée ! :) " }))
         .catch(error => res.status(400).json({ error }));

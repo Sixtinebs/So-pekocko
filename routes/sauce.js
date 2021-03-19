@@ -1,13 +1,13 @@
 const express =  require('express');
 const router = express.Router();
 
-const ctrlSauce = require('../controllers/sauce');
-//middlewar controle acces with autentificazion
+const sauceController = require('../controllers/sauce');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/mutler');
+
 console.log('coucou');
-router.get('/', ctrlSauce.getAllSauces);
-router.post('/', auth, multer, ctrlSauce.createSauce);
-//router.get('/:id', auth, ctrlSauce.getOneSauce);
+router.get('/', sauceController.getAllSauces);
+router.post('/', multer, sauceController.createSauce);
+router.get('/:id', auth, sauceController.getOneSauce);
 
 module.exports = router;

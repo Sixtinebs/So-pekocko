@@ -28,8 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 
 //My routes
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/auth', userRoute );
 app.use('/api/sauces', sauceRoute );
+app.use('/api/auth', userRoute );
 
 
 //app.listen(process.env.PORT || 3000)
