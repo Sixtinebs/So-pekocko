@@ -1,13 +1,14 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const Users = require('./models/users');
-const Sauces = require('./models/sauces');
 const app = express();
-
 const cors = require('cors');
+const path = require('path');
+
+const userRoute = require('./routes/user');
+const sauceRoute = require('./routes/sauce');
+
 const corsOptions = {
-  origin: 'http://localhost:4200',
+  origin: '*',
   optionsSuccessStatus: 200,
   allowedHeaders: 'Origin,X-Requested-With,Content,Accept,Content-Type,Authorization',
   methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS'
@@ -15,31 +16,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //connect to API
-mongoose.connect('mongodb+srv://sopekocko:sopekocko@cluster0.swkyz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://sopekocko:sopekocko@cluster0.swkyz.mongodb.net/So-Pekocko?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('api/auth/login', (req, res, next) => {
-    console.log(req);
-    Users.find()
-        .then(users => res.status(200).json( users ))
-        .catch(error => res.status(400).json({ error }))
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.post('/api/auth/signup', (req, res, next) => {
-    delete req.body.userId;
-    const user = new Users({
-        ...req.body
-      });
-      user.save()
-        .then(() => res.status(201).json({ message: 'Inscription réussite ! '}))
-        .catch(error => res.status(400).json({ error }));
-});
+//My routes
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/auth', userRoute );
+app.use('/api/sauces', sauceRoute );
 
 
 //app.listen(process.env.PORT || 3000)
