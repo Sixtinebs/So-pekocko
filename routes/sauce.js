@@ -8,6 +8,6 @@ const multer = require('../middleware/mutler');
 console.log('coucou');
 router.get('/', sauceController.getAllSauces);
 router.post('/', multer, sauceController.createSauce);
-router.get('/:id', auth, sauceController.getOneSauce);
+router.get('/:id', sauceController.getOneSauce);
 
 module.exports = router;
