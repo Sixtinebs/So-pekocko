@@ -5,9 +5,12 @@ const sauceController = require('../controllers/sauce');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/mutler');
 
-console.log('coucou');
-router.get('/', sauceController.getAllSauces);
-router.post('/', multer, sauceController.createSauce);
-router.get('/:id', sauceController.getOneSauce);
+
+router.get('/', auth, sauceController.getAllSauces);
+router.post('/', auth, multer, sauceController.createSauce);
+router.post('/:id/like', auth, sauceController.likeSauce);
+router.get('/:id', auth, sauceController.getOneSauce);
+router.put('/:id', auth, multer, sauceController.modifySauce);
+router.delete('/:id', auth, sauceController.deleteSauce);
 
 module.exports = router;
