@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config()
 
 const userRoute = require('./routes/user');
 const sauceRoute = require('./routes/sauce');
@@ -16,7 +17,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //connect to API
-mongoose.connect('mongodb+srv://sopekocko:sopekocko@cluster0.swkyz.mongodb.net/So-Pekocko?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.swkyz.mongodb.net/So-Pekocko?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))

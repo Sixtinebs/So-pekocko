@@ -1,14 +1,21 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const  MaskData = require('maskdata');
 
+const emailMask2Options = {
+    maskWith: "X", 
+    unmaskedStartCharactersBeforeAt: 3,
+    unmaskedEndCharactersAfterAt: 3,
+    maskAtTheRate: true
+}
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
             email: req.body.email,
-            // mask email
+            email2: MaskData.maskEmail2( req.body.email, emailMask2Options),
             password: hash
         });
         user.save()
