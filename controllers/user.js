@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const  MaskData = require('maskdata');
+const { body, validationResult } = require('express-validator');
 
 const emailMask2Options = {
     maskWith: "X", 
@@ -11,6 +12,10 @@ const emailMask2Options = {
 }
 
 exports.signup = (req, res, next) => {
+    const regex = /[a-zA-Z0-9]{6,60}/;
+    if(!regex.test(req.body.password)){
+        return res.status(400).json({ error: "Le mot de passe doit être compris entre 10 et 60 caractères constitué de lettres minuscules, lettres majuscules et des nombres"});
+    }
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
         const user = new User({
@@ -30,13 +35,13 @@ exports.login = (req, res, next) => {
     .then(user => {
         //if not user existe
         if(!user) {
-            return res.status(401).json({ error: "Cette email n'existe pas"});
+            return res.status(401).json({ error: new Error("Cette email n'existe pas")});
         }
         //if find user compare password
         bcrypt.compare( req.body.password, user.password)
         .then(valid => {
             if(!valid) {
-                return res.status(401).json({ error: "Le mot de passe n'est pas valide"});
+                return res.status(401).json({ error: new Error("Le mot de passe n'est pas valide") });
             }
             res.status(200).json({
                 userId: user._id,

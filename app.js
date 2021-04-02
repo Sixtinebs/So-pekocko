@@ -1,12 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const app = express();
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const sanitize = require('express-mongo-sanitize');
+
+
+//.env
 require('dotenv').config()
 
+const app = express();
+//Header more safe
+app.use(helmet());
 const userRoute = require('./routes/user');
 const sauceRoute = require('./routes/sauce');
+
 
 const corsOptions = {
   origin: '*',
@@ -15,6 +23,7 @@ const corsOptions = {
   methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS'
 }
 app.use(cors(corsOptions));
+
 
 //connect to API
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.swkyz.mongodb.net/So-Pekocko?retryWrites=true&w=majority`,
@@ -26,6 +35,8 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cl
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// INJECTION
+app.use(sanitize());
 
 //My routes
 app.use('/images', express.static(path.join(__dirname, 'images')));
