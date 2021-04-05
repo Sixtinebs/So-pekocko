@@ -54,7 +54,6 @@ exports.deleteSauce = (req, res, next) => {
 exports.likeSauce = (req, res, next) => {
     const userId = req.body.userId;
     const like = req.body.like;
-    console.log(req.body);
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
             switch (like) {
@@ -80,14 +79,10 @@ exports.likeSauce = (req, res, next) => {
                 // Si change d'avis
                 case 0:
                     if(sauce.usersLiked.includes(userId)) {
-                        console.log(sauce.usersLiked + sauce.like);
-                        console.log('je naime plus');
                         Sauce.updateOne({ _id: req.params.id }, { $inc: { likes: -1}, $pull: { usersLiked: userId } })
                         .then(() => res.status(200).json({ message: 'La sauce a été dislikes ! '}))
                         .catch (error => res.status(500).json({ error }))
                     } else if(sauce.usersDisliked.includes(userId)) {
-                        console.log('j aime en faite');
-                        console.log(sauce.usersDisliked + sauce.dislike);
                         Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1}, $pull: { usersDisliked: userId } })
                         .then(() => res.status(200).json({ message: 'La sauce a été dislikes ! '}))
                         .catch (error => res.status(500).json({ error }))
@@ -97,7 +92,6 @@ exports.likeSauce = (req, res, next) => {
                     // Quoi mettre ?
                 break;
             }
-            console.log(sauce.usersLiked + sauce.like);
         })
         .catch(error => res.status(404).json({ error }))
 
