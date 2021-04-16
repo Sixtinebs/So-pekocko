@@ -87,7 +87,7 @@ exports.likeSauce = (req, res, next) => {
                     }
                     break;
                 default:
-                    // Quoi mettre ?
+                    throw {error: 'Il y a eu une erreur'}
                 break;
             }
         })
